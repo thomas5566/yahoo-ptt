@@ -1,11 +1,11 @@
 from django.db import models
 
+
 class Movie(models.Model):
     title = models.CharField("title", max_length=255, unique=True)
     critics_consensus = models.TextField("Consensus", blank=True, null=True)
     date = models.CharField("date", max_length=255, blank=True, null=True)
-    duration = models.CharField(
-        "duration", max_length=255, blank=True, null=True)
+    duration = models.CharField("duration", max_length=255, blank=True, null=True)
     genre = models.CharField("genre", max_length=255, blank=True, null=True)
     rating = models.DecimalField(
         "rating", max_digits=3, decimal_places=2, blank=True, null=True
@@ -25,12 +25,13 @@ class Movie(models.Model):
 
 
 class PttMovie(models.Model):
-    # numberId = models.IntegerField('numberId')
     author = models.CharField("Author", max_length=255, blank=True, null=True)
     contenttext = models.TextField("Contenttext", blank=True, null=True)
     date = models.CharField("Date", max_length=255, blank=True, null=True)
     title = models.CharField("Title", max_length=255, blank=True, null=True)
-    key_word = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    key_word = models.ForeignKey(
+        Movie, on_delete=models.CASCADE, related_name="comments"
+    )
 
     def __str__(self):
         return self.title

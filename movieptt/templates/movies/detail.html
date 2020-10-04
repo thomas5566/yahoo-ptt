@@ -1,0 +1,16 @@
+{% load static %}
+
+<div>
+    {{ detail.title }}
+    <br>
+    {{ detail.critics_consensus }}
+    <br>
+    <img src="{{ detail.images.url }}" width="15%" class="rounded float-left">
+
+    {% for comment in comments %}
+    <b>{{ comment.title }}</b>
+    <b>{{ comment.contenttext }}</b>
+    <b>{{ comment.date }}</b>
+    <b>{{ comment.author }}</b>
+    {% endfor %}
+</div>

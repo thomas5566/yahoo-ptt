@@ -1,0 +1,24 @@
+
+{% extends 'movies/base.html' %}
+
+{% load static %}
+
+{# match base.py  block content name #}
+{% block content %}
+<div class="mx-auto">
+    {% for movie in movies %}
+    <ul class="list-unstyled">
+    <li class="media">
+        <img src="{{ movie.images.url }}" width="15%" class="rounded float-left" alt="...">
+        <div class="media-body">
+        <a href="{% url 'detail' movie.id %}">
+        <h5 class="mt-0 mb-1">{{ movie.title }}</h5>
+        </a>
+        <p>{{ movie.date }} {{ movie.genre}} {{ movie.duration }} {{ movie.rating}}</p>
+        </div>
+    </li>
+    </ul>
+    {% endfor %}
+    {% endblock content %}
+</div>
+

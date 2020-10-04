@@ -5,31 +5,37 @@ from crawlmovie.items import YahooCloudItem
 
 
 class YahoomovieSpider(CrawlSpider):
-    name = 'yahoomovie'
-    allowed_domains = ['yahoo.com.tw']
+    name = "yahoomovie"
+    allowed_domains = ["yahoo.com.tw"]
     start_urls = ["https://movies.yahoo.com.tw/movie_intheaters.html?page=1"]
 
+    IMAGE_DIR = "/Users/Thomas/Desktop/yahoo-ptt/media/movie/images"
+
     custom_settings = {
-        'DOWNLOAD_DELAY': 3,
+        "IMAGES_STORE": IMAGE_DIR,
+        "DOWNLOAD_DELAY": 3,
         "ITEM_PIPELINES": {
-            'crawlmovie.pipelines.YahooPipeline': 100,
-            'crawlmovie.pipelines.DeleteNullTitlePipeline': 200,
-            'crawlmovie.pipelines.DuplicatesTitlePipeline': 200,
+            "crawlmovie.pipelines.CustomImagePipeline": 1,
+            "crawlmovie.pipelines.YahooPipeline": 100,
+            "crawlmovie.pipelines.DeleteNullTitlePipeline": 200,
+            "crawlmovie.pipelines.DuplicatesTitlePipeline": 200,
         },
-        'AUTOTHROTTLE_ENABLED': True,
+        "AUTOTHROTTLE_ENABLED": True,
         # The initial download delay
-        'AUTOTHROTTLE_START_DELAY': 5,
+        "AUTOTHROTTLE_START_DELAY": 5,
         # The maximum download delay to be set in case of high latencies
-        'AUTOTHROTTLE_MAX_DELAY': 60,
+        "AUTOTHROTTLE_MAX_DELAY": 60,
         # The average number of requests Scrapy should be sending in parallel to
         # each remote server
-        'AUTOTHROTTLE_TARGET_CONCURRENCY': 1.0,
+        "AUTOTHROTTLE_TARGET_CONCURRENCY": 1.0,
         # "CLOSESPIDER_ITEMCOUNT": 150,
     }
 
     rules = (
         Rule(
-            LinkExtractor(restrict_xpaths="//div[@class='release_movie_name']/a"), callback="parse_item", follow=True,
+            LinkExtractor(restrict_xpaths="//div[@class='release_movie_name']/a"),
+            callback="parse_item",
+            follow=True,
         ),
         Rule(LinkExtractor(restrict_xpaths="//li[@class='nexttxt']/a")),
     )
@@ -55,8 +61,7 @@ class YahoomovieSpider(CrawlSpider):
         duration = response.xpath(
             "//div[@class='movie_intro_info_r']/span[2]/text()"
         ).extract()
-        item["duration"] = "".join([i.replace(u"\\u3000\\", u"")
-                                    for i in duration])
+        item["duration"] = "".join([i.replace(u"\\u3000\\", u"") for i in duration])
 
         item["genre"] = response.xpath(
             "normalize-space((//div[@class='level_name'])[2]/a/text())"
@@ -64,12 +69,12 @@ class YahoomovieSpider(CrawlSpider):
         # i['rating'] = response.css(
         #     '.ratingValue ::text').extract()[1]
         item["rating"] = response.xpath(
-            "//div[@class='score_num count']/text()").extract()
+            "//div[@class='score_num count']/text()"
+        ).extract()
         item["amount_reviews"] = response.xpath(
             "//div[@class='circlenum']/div[@class='num']/span/text()"
         ).extract()
-        url = response.xpath(
-            "//div[@class='movie_intro_foto']/img/@src").extract()
+        url = response.xpath("//div[@class='movie_intro_foto']/img/@src").extract()
         link = "".join(url)
         item["images"] = {item["title"]: link}
 

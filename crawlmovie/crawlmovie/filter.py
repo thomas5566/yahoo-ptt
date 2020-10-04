@@ -1,40 +1,42 @@
-
 import pandas as pd
 import django
-import os
-import sys
+import os, sys
 
-sys.path.append(os.path.join(os.path.dirname(
-    os.path.dirname(os.path.abspath(__file__))), ".."))
-os.environ['DJANGO_SETTINGS_MODULE'] = 'best_movies.settings'
+sys.path.append(
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "..")
+)
+os.environ["DJANGO_SETTINGS_MODULE"] = "best_movies.settings"
 django.setup()
 
 from movieptt.models import PttMovie
+from movieptt.models import Movie
 
-movies = pd.read_csv("ptt.csv").dropna(how='all')
+movies = pd.read_csv("ptt.csv").dropna(how="all")
 movies["title"] = movies["title"].astype("category")
 titles = pd.read_csv("yahoo.csv")
 key_word = titles.iloc[:, 7]
 newDF = pd.DataFrame()
 for key in key_word:
     mask = movies["title"].str.contains(key)  # string compare
-    movies["key_word"] = key  # Add new column
-    # for x in mask:
-    #     movies["key_word"] = key
-    # # data.append(movies[mask])
-    newDF = newDF.append(movies[mask], ignore_index=True)
+    if mask.any() == True:
+        movies["key_word"] = key  # Add new column
+        newDF = newDF.append(movies[mask], ignore_index=True)
+    else:
+        pass
 
 print(newDF)
-df_records = newDF.to_dict('records')
-
+newDF.to_csv('output.csv')
+df_records = newDF.to_dict("records")
 model_instances = [
     PttMovie(
-        author=record['author'],
-        contenttext=record['contenttext'],
-        date=record['date'],
-        title=record['title'],
-        key_word=record['key_word'],
-) for record in df_records]
+        author=record["author"],
+        contenttext=record["contenttext"],
+        date=record["date"],
+        title=record["title"],
+        key_word=Movie.objects.get(title=record["key_word"]),
+    )
+    for record in df_records
+]
 
 PttMovie.objects.bulk_create(model_instances)
 

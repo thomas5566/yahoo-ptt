@@ -6,11 +6,53 @@
     {{ detail.critics_consensus }}
     <br>
     <img src="{{ detail.images.url }}" width="15%" class="rounded float-left">
+</div>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
 
-    {% for comment in comments %}
-    <b>{{ comment.title }}</b>
-    <b>{{ comment.contenttext }}</b>
-    <b>{{ comment.date }}</b>
-    <b>{{ comment.author }}</b>
-    {% endfor %}
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1" id="logout">
+            <div class="page-header">
+                <h3 class="reviews">Leave your comment</h3>
+            </div>
+            {% for item in movies.comments.all %}
+            <div class="comment-tabs">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#comments-logout" role="tab" data-toggle="tab">
+                            <h4 class="reviews text-capitalize">{{ item.title }}</h4>
+                        </a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="comments-logout">
+                        <ul class="media-list">
+                            <li class="media">
+                                <a class="pull-left" href="#"></a>
+                                <div class="media-body">
+                                    <div class="well well-lg">
+                                        <h4 class="media-heading text-uppercase reviews">{{ item.author }}</h4>
+                                        <ul class="media-date text-uppercase reviews list-inline">
+                                            <li class="dd">{{ item.date }}</li>
+                                        </ul>
+                                        <p class="media-comment">
+                                            {{ item.contenttext }}
+                                        </p>
+                                        <a class="btn btn-info btn-circle text-uppercase" href="#" id="reply"><span
+                                                class="glyphicon glyphicon-share-alt"></span> Reply</a>
+                                        <a class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse"
+                                            href="#replyOne"><span class="glyphicon glyphicon-comment"></span> 2
+                                            comments</a>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

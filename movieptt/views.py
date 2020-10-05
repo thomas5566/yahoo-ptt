@@ -9,6 +9,7 @@ from .models import PttMovie
 
 def home(request):
     all_rows = Movie.objects.all()
+
     movies = [
         all_rows.filter(title=item["title"]).last()
         for item in Movie.objects.values("title")
@@ -16,16 +17,31 @@ def home(request):
         .order_by("rating")
         .reverse()
     ]
-    return render(request, "movies/home.html", {"movies": movies})
+
+    context = {
+        'movies': movies
+    }
+    return render(request, "movies/home.html", context)
 
 
 def detail(request, movie_pk):
     detail = get_object_or_404(Movie, pk=movie_pk)
-    return render(request, "movies/detail.html", {"detail": detail})
+    movies = Movie.objects.get(pk=movie_pk)
+    context = {
+        'detail': detail,
+        'movies': movies
+    }
+
+    return render(request, "movies/detail.html", context)
 
 
-def comments(request, comments):
-    movies = [m.title for m in Movie.objects.all()]
-    if comments in movies:
-        match_comments = PttMovie.objects.filter(comments__title=comments)
-        return render(request, "movies/detail.html", {"comments": match_comments})
+# def comments(request, movie_pk):
+#     movies = Movie.objects.all().values()
+
+#     comments = movies.objects.filter(comments_title='天能')
+
+#     # comments = PttMovie.objects.filter(comments=request.title)
+#     context = {
+#         'comments': comments,
+#     }
+#     return render(request, "movies/detail.html", context)

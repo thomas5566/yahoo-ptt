@@ -29,9 +29,7 @@ class PttMovie(models.Model):
     contenttext = models.TextField("Contenttext", blank=True, null=True)
     date = models.CharField("Date", max_length=255, blank=True, null=True)
     title = models.CharField("Title", max_length=255, blank=True, null=True)
-    key_word = models.ForeignKey(
-        Movie, on_delete=models.CASCADE, related_name="comments"
-    )
+    key_word = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="comments")
 
     def __str__(self):
         return self.title

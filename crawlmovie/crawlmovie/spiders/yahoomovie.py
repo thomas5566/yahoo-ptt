@@ -9,7 +9,8 @@ class YahoomovieSpider(CrawlSpider):
     allowed_domains = ["yahoo.com.tw"]
     start_urls = ["https://movies.yahoo.com.tw/movie_intheaters.html?page=1"]
 
-    IMAGE_DIR = "/Users/Thomas/Desktop/yahoo-ptt/media/movie/images"
+    # IMAGE_DIR = "/Users/Thomas/Desktop/yahoo-ptt/media/movie/images"
+    IMAGE_DIR = "D:\\Users\\Administrator\\gb5566\\yahoo_ptt\\media\\movie\\images\\yahoo"
 
     custom_settings = {
         "IMAGES_STORE": IMAGE_DIR,
@@ -33,7 +34,8 @@ class YahoomovieSpider(CrawlSpider):
 
     rules = (
         Rule(
-            LinkExtractor(restrict_xpaths="//div[@class='release_movie_name']/a"),
+            LinkExtractor(
+                restrict_xpaths="//div[@class='release_movie_name']/a"),
             callback="parse_item",
             follow=True,
         ),
@@ -61,7 +63,8 @@ class YahoomovieSpider(CrawlSpider):
         duration = response.xpath(
             "//div[@class='movie_intro_info_r']/span[2]/text()"
         ).extract()
-        item["duration"] = "".join([i.replace(u"\\u3000\\", u"") for i in duration])
+        item["duration"] = "".join(
+            [i.replace(u"\\u3000\\", u"") for i in duration])
 
         item["genre"] = response.xpath(
             "normalize-space((//div[@class='level_name'])[2]/a/text())"
@@ -74,7 +77,8 @@ class YahoomovieSpider(CrawlSpider):
         item["amount_reviews"] = response.xpath(
             "//div[@class='circlenum']/div[@class='num']/span/text()"
         ).extract()
-        url = response.xpath("//div[@class='movie_intro_foto']/img/@src").extract()
+        url = response.xpath(
+            "//div[@class='movie_intro_foto']/img/@src").extract()
         link = "".join(url)
         item["images"] = {item["title"]: link}
 

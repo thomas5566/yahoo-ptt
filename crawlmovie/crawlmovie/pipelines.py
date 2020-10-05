@@ -10,8 +10,8 @@ from movieptt.models import Movie
 
 def clean_title(param):
     # regex = "[A-Za-z\/\[\]\.\']+"
-    regex = "[^\u4e00-\u9fa5]+"
-    param = re.sub(regex, " ", str(param))
+    # regex = "[^\u4e00-\u9fa5]+"
+    # param = re.sub(regex, " ", str(param))
     return "".join(param)
 
 

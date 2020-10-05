@@ -18,11 +18,13 @@ key_word = titles.iloc[:, 7]
 newDF = pd.DataFrame()
 for key in key_word:
     mask = movies["title"].str.contains(key)  # string compare
-    if mask.any() == True:
-        movies["key_word"] = key  # Add new column
-        newDF = newDF.append(movies[mask], ignore_index=True)
-    else:
-        pass
+    movies["key_word"] = key  # Add new column
+    newDF = newDF.append(movies[mask], ignore_index=True)
+    # if mask.any() == True:
+    #     movies["key_word"] = key  # Add new column
+    #     newDF = newDF.append(movies[mask], ignore_index=True)
+    # else:
+    #     pass
 
 print(newDF)
 newDF.to_csv('output.csv')

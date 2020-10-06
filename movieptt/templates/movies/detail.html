@@ -1,30 +1,80 @@
+{% extends 'movies/base.html' %}
+
 {% load static %}
 
-<div>
-    {{ detail.title }}
-    <br>
-    {{ detail.critics_consensus }}
-    <br>
-    <img src="{{ detail.images.url }}" width="15%" class="rounded float-left">
-</div>
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
+{# match base.py  block content name #}
+{% block content %}
+<script>
+    $(document).ready(function () {
+        $(".btn-primary").click(function () {
+            var id = $(this).data("id");
+            $("#half-" + id).hide();
+            $("#full-" + id).show();
+        });
+    });
+</script>
 
-<div class="container">
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <!-- 可以輪播的Banner圖片 -->
+        <section>
+            <div id="carousel-controller" class="carousel slide" data-ride="carousel">
+                <!-- 輪播圖片 -->
+                <div class="carousel-inner">
+                    <!-- 圖片1 -->
+                    <div class="carousel-item active">
+                        <img class="w-100" src="{{ detail.images.url }}" alt="">
+                        <div class="carousel-caption">
+                            <h1>{{ detail.title }}</h1>
+                            <p>{{ detail.critics_consensus|truncatechars:300 }}</p>
+                        </div>
+                    </div>
+                    <!-- 圖片2 -->
+                    <div class="carousel-item">
+                        <img class="w-100" src="yahoo\大雄的新恐龍1.jpg" alt="">
+                        <div class="carousel-caption">
+                            <h1>智慧把手</h1>
+                            <p>鍋具輕鬆轉換 美味直接盛盤</p>
+                        </div>
+                    </div>
+                    <!-- 圖片3 -->
+                    <div class="carousel-item">
+                        <img class="w-100" src="images/Banner3.jpg" alt="">
+                        <div class="carousel-caption">
+                            <h1>圓弧設計</h1>
+                            <p>堆疊收納 節省空間</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 圖片上一頁按鈕 -->
+                <a href="#carousel-controller" data-slide="prev" class="carousel-control-prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </a>
+                <!-- 圖片下一頁按鈕 -->
+                <a href="#carousel-controller" data-slide="next" class=" carousel-control-next">
+                    <span class="carousel-control-next-icon"></span>
+                </a>
 
-    <div class="row">
+                <!-- 下方點點 -->
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel-controller" data-slide-to="0" class="active"></li>
+                    <li data-target="#carousel-controller" data-slide-to="1"></li>
+                    <li data-target="#carousel-controller" data-slide-to="2"></li>
+                </ol>
+            </div>
+        </section>
         <div class="col-sm-10 col-sm-offset-1" id="logout">
             <div class="page-header">
-                <h3 class="reviews">Leave your comment</h3>
+                <h2 class="reviews">PTT 評論</h2>
             </div>
             {% for item in movies.comments.all %}
             <div class="comment-tabs">
                 <ul class="nav nav-tabs" role="tablist">
-                    <li class="active"><a href="#comments-logout" role="tab" data-toggle="tab">
-                            <h4 class="reviews text-capitalize">{{ item.title }}</h4>
-                        </a></li>
+                    <li class="active">
+                        <a href="#comments-logout" role="tab" data-toggle="tab">
+                            <h3 class="reviews text-capitalize">{{ item.title }}</h3>
+                        </a>
+                    </li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="comments-logout">
@@ -38,21 +88,29 @@
                                             <li class="dd">{{ item.date }}</li>
                                         </ul>
                                         <p class="media-comment">
+                                            {% if item.contenttext|length > 150 %}
+                                        </p>
+                                        <p class="half-content" id="half-{{item.id}}">
+                                            {{ item.contenttext|truncatechars:40 }}
+                                            <a data-id="{{item.id}}" href="javascript:void();" class="btn btn-primary">
+                                                Read More
+                                            </a>
+                                        </p>
+                                        <p class="full-content" id="full-{{item.id}}" style="display: none;">
                                             {{ item.contenttext }}
                                         </p>
-                                        <a class="btn btn-info btn-circle text-uppercase" href="#" id="reply"><span
-                                                class="glyphicon glyphicon-share-alt"></span> Reply</a>
-                                        <a class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse"
-                                            href="#replyOne"><span class="glyphicon glyphicon-comment"></span> 2
-                                            comments</a>
+                                        {% else %}
+                                        <p>{{ item.contenttext }}</p>
+                                        {% endif %}
                                     </div>
                                 </div>
-                                {% endfor %}
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </div>
 </div>
+{% endblock content %}

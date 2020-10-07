@@ -4,6 +4,8 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from crawlmovie.items import ScrapyCloudItem
 
+from datetime import datetime
+
 
 class PttMoviesSpider(CrawlSpider):
     name = "ptt_movies"
@@ -57,10 +59,12 @@ class PttMoviesSpider(CrawlSpider):
                 ).extract()
                 # i['author'] = ''.join(author)
 
-                item["date"] = response.xpath(
+                pttdatetime = response.xpath(
                     "(//span[@class='article-meta-value'])[4]/text()"
                 ).extract()
-                # i['date'] = ''.join(date)
+                datetime_str = ''.join(str(date) for date in pttdatetime)
+                item["date"] = datetime.strptime(datetime_str, "%a %b %d %H:%M:%S %Y").strftime(
+                    "%Y-%m-%d %H:%M:%S")
 
                 item["contenttext"] = response.xpath(
                     "//div[@id='main-content']/text()"

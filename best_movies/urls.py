@@ -23,7 +23,7 @@ from movieptt import views
 
 urlpatterns = [
     path("", views.home, name="home"),
-    path("movie/<int:movie_pk>", views.detail, name="detail"),
+    path("movie/<int:movie_pk>", views.detail_view, name="detail"),
     path("admin/", admin.site.urls),
 ]
 

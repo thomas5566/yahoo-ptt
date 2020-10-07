@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
 
 from .models import Movie
+from .models import MovieImage
 from .models import PttMovie
 
 
@@ -24,12 +25,15 @@ def home(request):
     return render(request, "movies/home.html", context)
 
 
-def detail(request, movie_pk):
-    detail = get_object_or_404(Movie, pk=movie_pk)
-    movies = Movie.objects.get(pk=movie_pk)
+def detail_view(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    # comment = Movie.objects.get(pk=movie_pk)
+    comments = PttMovie.objects.filter(key_word=movie)
+    images = MovieImage.objects.filter(movie=movie)
     context = {
-        'detail': detail,
-        'movies': movies
+        'movie': movie,
+        'comments': comments,
+        'images': images,
     }
 
     return render(request, "movies/detail.html", context)

@@ -1,6 +1,9 @@
+from datetime import datetime
+from time import strftime
 from itemadapter import ItemAdapter
 import scrapy
-import os, re
+import os
+import re
 
 from scrapy.pipelines.images import ImagesPipeline, FilesPipeline
 from scrapy.exceptions import DropItem
@@ -20,9 +23,16 @@ def clean_critics_consensus(param):
 
 
 def clean_date(param):
+    #try:
     regex = "[^0-9]+"
     param = re.sub(regex, "", str(param))
-    return "".join(param)
+    param = datetime.strptime(param, "%Y%m%d").strftime("%Y-%m-%d")
+    return param
+    # except ValueError:
+    #     # regex = "[^0-9]+"
+    #     # param = re.sub(regex, "", str(param))
+    #     param = datetime.strptime(param, "%a %b %d %H:%M:%S %Y").strftime("%Y-%m-%d %H%M")
+    #     return param
 
 
 def clean_duration(param):
@@ -67,7 +77,7 @@ class PttPipeline:
     def process_item(self, item, spider):
         item["title"] = clean_title(item["title"])
         item["author"] = clean_author(item["author"])
-        item["date"] = clean_date(item["date"])
+        item["date"] = item["date"]
         item["contenttext"] = clean_contenttext(item["contenttext"])
 
         return item
@@ -77,7 +87,8 @@ class YahooPipeline:
     def process_item(self, item, spider):
         item["title"] = clean_title(item["title"])
         item["date"] = clean_date(item["date"])
-        item["critics_consensus"] = clean_critics_consensus(item["critics_consensus"])
+        item["critics_consensus"] = clean_critics_consensus(
+            item["critics_consensus"])
         item["duration"] = clean_duration(item["duration"])
         item["genre"] = clean_genre(item["genre"])
         item["rating"] = clean_rating(item["rating"])
@@ -86,7 +97,7 @@ class YahooPipeline:
 
         Movie.objects.create(
             title=item["title"],
-            date=item["date"],
+            release_date=item["date"],
             critics_consensus=item["critics_consensus"],
             duration=item["duration"],
             genre=item["genre"],

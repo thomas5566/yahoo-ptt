@@ -23,7 +23,7 @@ def clean_critics_consensus(param):
 
 
 def clean_date(param):
-    #try:
+    # try:
     regex = "[^0-9]+"
     param = re.sub(regex, "", str(param))
     param = datetime.strptime(param, "%Y%m%d").strftime("%Y-%m-%d")

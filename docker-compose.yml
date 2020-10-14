@@ -2,9 +2,12 @@ version: "3" # docker-compose.yml  versions
 services:
   thomas5566:
     restart: always # 除正常工作外，容器會在任何時候重啟，比如遭遇bug、進程崩潰、docker 重啟等情況。
-    build: . # '点'代表当前目录 指定一個包含Dockerfile的路徑，並通過此Dockerfile來構建容器鏡像。注意那個"." ,代表當前目錄。
+    build: . # '.'代表当前目录 指定一個包含Dockerfile的路徑，並通過此Dockerfile來構建容器鏡像。
+             # 注意那個"." ,代表當前目錄。
     command: "python3 manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/code # 定義了宿主機和容器之間的映射："."表示宿主機的當前目錄，":"為分隔符，"/code"表示容器中的目錄。即宿主機當前目錄和容器的/code目錄是連通的，宿主機當前目錄的Django代碼更新時，容器中的/code目錄中的代碼也相應的更新了。
+      - .:/code # 定義了宿主機和容器之間的映射："."表示宿主機的當前目錄，":"為分隔符，"/code"表示容器中的目錄。
+        # 即宿主機當前目錄和容器的/code目錄是連通的，宿主機當前目錄的Django代碼更新時，
+        # 容器中的/code目錄中的代碼也相應的更新了。
     ports:
       - "8000:8000"

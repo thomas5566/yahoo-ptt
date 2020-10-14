@@ -4,6 +4,8 @@
 
 {# match base.py  block content name #}
 {% block content %}
+
+
 <script>
     $(document).ready(function () {
         $(".btn-primary").click(function () {
@@ -95,15 +97,15 @@
                                         </p>
                                         <p class="half-content" id="half-{{item.id}}">
                                             {{ item.contenttext|truncatechars:40 }}
-                                            <a data-id="{{item.id}}" href="javascript:void();" class="btn btn-primary">
+                                            <a data-id="{{item.id}}" href="javascript:;" class="btn btn-primary">
                                                 Read More
                                             </a>
                                         </p>
                                         <p class="full-content" id="full-{{item.id}}" style="display: none;">
-                                            {{ item.contenttext }}
+                                            {{ item.contenttext|linebreaksbr }}
                                         </p>
                                         {% else %}
-                                        <p>{{ item.contenttext }}</p>
+                                        <p>{{ item.contenttext|linebreaks }}</p>
                                         {% endif %}
                                     </div>
                                 </div>

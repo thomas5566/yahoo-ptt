@@ -1,9 +1,13 @@
+
 import pandas as pd
 import django
-import os, sys
+import os
+import sys
+from collections import Counter
 
 sys.path.append(
-    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "..")
+    os.path.join(os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))), "..")
 )
 os.environ["DJANGO_SETTINGS_MODULE"] = "best_movies.settings"
 django.setup()
@@ -13,9 +17,10 @@ from movieptt.models import Movie
 
 movies = pd.read_csv("ptt.csv").dropna(how="all")
 movies["title"] = movies["title"].astype("category")
-titles = pd.read_csv("yahoo.csv")
 
-key_word = titles.iloc[:, 7]
+titles = pd.read_csv("yahoomovie.csv")
+key_word = titles.iloc[:, 0]
+
 newDF = pd.DataFrame()
 
 for key in key_word:
@@ -23,8 +28,12 @@ for key in key_word:
     movies["key_word"] = key  # Add new column
     newDF = newDF.append(movies[mask], ignore_index=True)
 
-print(newDF)
+for key in key_word:
+    if movies["title"].str.contains(key).any() == True:
+        print(movies["title"].str.count('好雷'))
+
 newDF.to_csv('output.csv')
+
 df_records = newDF.to_dict("records")
 model_instances = [
     PttMovie(

@@ -22,7 +22,7 @@ class Movie(models.Model):
 
 
 class MovieImage(models.Model):
-    movie = models.ForeignKey(Movie, default=None, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, default=None, on_delete=models.DO_NOTHING)
     images = models.ImageField(upload_to="yahoo/")
 
     def __str__(self):
@@ -35,7 +35,7 @@ class PttMovie(models.Model):
     date = models.CharField("Date", max_length=255, blank=True)
     title = models.CharField("Title", max_length=255, blank=True)
     key_word = models.ForeignKey(
-        Movie, on_delete=models.CASCADE, related_name="comments")
+        Movie, on_delete=models.DO_NOTHING, related_name="comments")
 
     def __str__(self):
         return self.title

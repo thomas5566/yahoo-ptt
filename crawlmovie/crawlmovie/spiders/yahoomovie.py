@@ -1,7 +1,11 @@
+from os import write
 import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from crawlmovie.items import YahooCloudItem
+
+from scrapy import signals
+import csv
 
 
 class YahoomovieSpider(CrawlSpider):
@@ -20,6 +24,7 @@ class YahoomovieSpider(CrawlSpider):
             "crawlmovie.pipelines.YahooPipeline": 100,
             "crawlmovie.pipelines.DeleteNullTitlePipeline": 200,
             "crawlmovie.pipelines.DuplicatesTitlePipeline": 200,
+            "crawlmovie.pipelines.CsvExportPipeline": 300,
         },
         "AUTOTHROTTLE_ENABLED": True,
         # The initial download delay

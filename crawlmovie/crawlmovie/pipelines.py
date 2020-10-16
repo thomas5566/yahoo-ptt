@@ -8,6 +8,12 @@ import re
 from scrapy.pipelines.images import ImagesPipeline, FilesPipeline
 from scrapy.exceptions import DropItem
 
+# Scrapy export csv without specifying in cmd
+from scrapy import signals
+from scrapy.exporters import CsvItemExporter, JsonItemExporter
+import csv
+
+
 from movieptt.models import Movie
 
 
@@ -95,16 +101,19 @@ class YahooPipeline:
         item["images"] = clean_images(item["images"])
         item["amount_reviews"] = clean_amount_reviews(item["amount_reviews"])
 
-        Movie.objects.create(
-            title=item["title"],
-            release_date=item["date"],
-            critics_consensus=item["critics_consensus"],
-            duration=item["duration"],
-            genre=item["genre"],
-            rating=item["rating"],
-            images=item["images"],
-            amount_reviews=item["amount_reviews"],
-        )
+        try:
+            Movie.objects.create(
+                title=item["title"],
+                release_date=item["date"],
+                critics_consensus=item["critics_consensus"],
+                duration=item["duration"],
+                genre=item["genre"],
+                rating=item["rating"],
+                images=item["images"],
+                amount_reviews=item["amount_reviews"],
+            )
+        except:
+            print("The movie information is already exists!!")
 
         return item
 
@@ -142,4 +151,33 @@ class DuplicatesTitlePipeline(object):
         if title in self.movie:
             raise DropItem("duplicates title found %s", item)
         self.movie.add(title)
+        return item
+
+
+class CsvExportPipeline(object):
+    def __init__(self):
+        self.files = {}
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        pipeline = cls()
+        crawler.signals.connect(pipeline.spider_opened, signals.spider_opened)
+        crawler.signals.connect(pipeline.spider_closed, signals.spider_closed)
+        return pipeline
+
+    def spider_opened(self, spider):
+        file = open('%s.csv' % spider.name, 'w+b')
+        self.files[spider] = file
+        self.exporter = CsvItemExporter(file)
+        self.exporter.fields_to_export = ['title', 'critics_consensus', 'date',
+                                          'duration', 'genre', 'rating', 'amount_reviews', 'images']
+        self.exporter.start_exporting()
+
+    def spider_closed(self, spider):
+        self.exporter.finish_exporting()
+        file = self.files.pop(spider)
+        file.close()
+
+    def process_item(self, item, spider):
+        self.exporter.export_item(item)
         return item

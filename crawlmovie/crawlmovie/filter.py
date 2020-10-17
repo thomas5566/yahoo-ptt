@@ -1,5 +1,5 @@
-
 import pandas as pd
+import numpy as np
 import django
 import os
 import sys
@@ -28,10 +28,8 @@ for key in key_word:
     movies["key_word"] = key  # Add new column
     newDF = newDF.append(movies[mask], ignore_index=True)
 
-for key in key_word:
-    if movies["title"].str.contains(key).any() == True:
-        print(movies["title"].str.count('好雷'))
-
+newDF['good_ray'] = newDF.groupby(['key_word'])['title'].transform(lambda x: x[x.str.contains('好雷')].count())
+newDF['bad_ray'] = newDF.groupby(['key_word'])['title'].transform(lambda x: x[x.str.contains('負雷')].count())
 newDF.to_csv('output.csv')
 
 df_records = newDF.to_dict("records")
@@ -41,7 +39,7 @@ model_instances = [
         contenttext=record["contenttext"],
         date=record["date"],
         title=record["title"],
-        key_word=Movie.objects.get(title=record["key_word"]),
+        key_word=Movie.objects.get(title=record["key_word"]), # foreign key
     )
     for record in df_records
 ]

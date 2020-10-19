@@ -10,7 +10,7 @@ class Movie(models.Model):
     duration = models.CharField("Duration", max_length=255, blank=True)
     genre = models.CharField("Genre", max_length=255, blank=True)
     rating = models.DecimalField(
-        "rating", max_digits=3, decimal_places=2, blank=True)
+        "Rating", max_digits=3, decimal_places=2, blank=True)
     images = models.ImageField("Images", blank=True)
     amount_reviews = models.CharField(
         "Amount_reviews", max_length=255, blank=True)
@@ -22,7 +22,7 @@ class Movie(models.Model):
 
 
 class MovieImage(models.Model):
-    movie = models.ForeignKey(Movie, default=None, on_delete=models.DO_NOTHING)
+    movie = models.ForeignKey(Movie, default=None, on_delete=models.CASCADE)
     images = models.ImageField(upload_to="yahoo/")
 
     def __str__(self):
@@ -35,7 +35,15 @@ class PttMovie(models.Model):
     date = models.CharField("Date", max_length=255, blank=True)
     title = models.CharField("Title", max_length=255, blank=True)
     key_word = models.ForeignKey(
-        Movie, on_delete=models.DO_NOTHING, related_name="comments")
+        Movie, on_delete=models.CASCADE, related_name="comments")
 
     def __str__(self):
         return self.title
+
+class CountGoodAndBad(models.Model):
+    good_ray = models.CharField("Good_ray", max_length=255, blank=True)
+    bad_ray = models.CharField("Bad_ray", max_length=255, blank=True)
+    movie = models.ForeignKey(Movie, default=None, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.movie.title

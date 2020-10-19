@@ -6,6 +6,7 @@ from django.views.generic.edit import CreateView
 from .models import Movie
 from .models import MovieImage
 from .models import PttMovie
+from .models import CountGoodAndBad
 
 
 def home(request):
@@ -30,10 +31,13 @@ def detail_view(request, movie_pk):
     # comment = Movie.objects.get(pk=movie_pk)
     comments = PttMovie.objects.filter(key_word=movie)
     images = MovieImage.objects.filter(movie=movie)
+    count_good_bad = CountGoodAndBad.objects.filter(movie=movie)
+
     context = {
         'movie': movie,
         'comments': comments,
         'images': images,
+        'count_good_bad': count_good_bad,
     }
 
     return render(request, "movies/detail.html", context)

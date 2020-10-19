@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Movie, PttMovie, MovieImage
+from .models import Movie, PttMovie, MovieImage, CountGoodAndBad
 # Register your models here.
 
 
@@ -28,3 +28,7 @@ class PttMovieAdmin(admin.ModelAdmin):
 
 
 admin.site.register(PttMovie, PttMovieAdmin)
+
+class CountGoodAndBadAdmin(admin.ModelAdmin):
+    list_display = ('movie', 'good_ray', 'bad_ray', )
+admin.site.register(CountGoodAndBad, CountGoodAndBadAdmin)

@@ -70,10 +70,16 @@
 
         <div class="col-sm-10 col-sm-offset-1" id="logout">
             <div class="page-header">
-                <h2 class="reviews">PTT 評論</h2>
-                {% for item in count_good_bad.all %}
-                <h3 class="reviews">好雷: {{ item.good_ray }} 負雷: {{ item.bad_ray }}</h3>
-                {% endfor %}
+                <h2 class="reviews">PTT 評論
+                    {% for item in count_good_bad.all %}
+                    {% if item %}
+                    <img src="{% static 'movieptt/good.png' %}" width="30" height="30"
+                        class="d-inline-block align-top">{{ item.good_ray }}
+                    <img src="{% static 'movieptt/bad.png' %}" width="30" height="30"
+                        class="d-inline-block align-top">{{ item.bad_ray }}
+                    {% endif %}
+                    {% endfor %}
+                </h2>
             </div>
             {% for item in comments.all %}
             <div class="comment-tabs">

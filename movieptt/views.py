@@ -2,11 +2,25 @@ from django.http import request
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
+from django.views.generic.list import ListView
+
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import JSONParser
 
 from .models import Movie
 from .models import MovieImage
 from .models import PttMovie
 from .models import CountGoodAndBad
+
+from movieptt.serializers import MovieSerializer
+
+
+class MovieViewSet(viewsets.ModelViewSet):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    permission_classes = (IsAuthenticated,)
+    parser_classes = (JSONParser,)
 
 
 def home(request):
@@ -41,7 +55,6 @@ def detail_view(request, movie_pk):
     }
 
     return render(request, "movies/detail.html", context)
-
 
 # def comments(request, movie_pk):
 #     movies = Movie.objects.all().values()

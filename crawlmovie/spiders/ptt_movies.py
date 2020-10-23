@@ -1,3 +1,8 @@
+
+import sys, os, django
+sys.path.append("..")
+os.environ["DJANGO_SETTINGS_MODULE"] = "best_movies.settings"
+django.setup()
 import scrapy
 
 from scrapy.linkextractors import LinkExtractor
@@ -18,6 +23,7 @@ class PttMoviesSpider(CrawlSpider):
             "crawlmovie.pipelines.PttPipeline": 100,
             "crawlmovie.pipelines.DeleteNullTitlePipeline": 200,
             "crawlmovie.pipelines.DuplicatesTitlePipeline": 200,
+            "crawlmovie.pipelines.CsvExportPipeline": 300,
         },
         "AUTOTHROTTLE_ENABLED": True,
         # The initial download delay

@@ -1,11 +1,15 @@
-from os import write
-import scrapy
-from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import CrawlSpider, Rule
-from crawlmovie.items import YahooCloudItem
 
-from scrapy import signals
-import csv
+import sys, os, django
+sys.path.append("..")
+os.environ["DJANGO_SETTINGS_MODULE"] = "best_movies.settings"
+django.setup()
+# import csv
+# from scrapy import signals
+from crawlmovie.items import YahooCloudItem
+from scrapy.spiders import CrawlSpider, Rule
+from scrapy.linkextractors import LinkExtractor
+import scrapy
+from os import write
 
 
 class YahoomovieSpider(CrawlSpider):

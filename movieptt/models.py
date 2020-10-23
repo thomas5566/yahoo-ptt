@@ -41,8 +41,8 @@ class PttMovie(models.Model):
         return self.title
 
 class CountGoodAndBad(models.Model):
-    good_ray = models.CharField("Good_ray", max_length=255, blank=True)
-    bad_ray = models.CharField("Bad_ray", max_length=255, blank=True)
+    good_ray = models.IntegerField("Good_ray", default=0)
+    bad_ray = models.IntegerField("Bad_ray", default=0)
     movie = models.ForeignKey(Movie, default=None, on_delete=models.CASCADE)
 
     def __str__(self):

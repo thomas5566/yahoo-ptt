@@ -8,6 +8,7 @@ django.setup()
 from crawlmovie.items import YahooCloudItem
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
+
 import scrapy
 from os import write
 
@@ -90,5 +91,7 @@ class YahoomovieSpider(CrawlSpider):
             "//div[@class='movie_intro_foto']/img/@src").extract()
         link = "".join(url)
         item["images"] = {item["title"]: link}
+
+
 
         yield item

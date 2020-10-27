@@ -1,4 +1,3 @@
-
 import sys, os, django
 sys.path.append("..")
 os.environ["DJANGO_SETTINGS_MODULE"] = "best_movies.settings"
@@ -7,6 +6,7 @@ import scrapy
 
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
+from scrapy.exceptions import CloseSpider
 from crawlmovie.items import ScrapyCloudItem
 
 from datetime import datetime
@@ -17,8 +17,11 @@ class PttMoviesSpider(CrawlSpider):
     allowed_domains = ["www.ptt.cc"]
     start_urls = ["https://www.ptt.cc/bbs/movie/index.html"]
 
+    count = 40
+
     custom_settings = {
         "DOWNLOAD_DELAY": 3,
+        # 'CLOSESPIDER_PAGECOUNT': 5,
         "ITEM_PIPELINES": {
             "crawlmovie.pipelines.PttPipeline": 100,
             "crawlmovie.pipelines.DeleteNullTitlePipeline": 200,
@@ -75,6 +78,11 @@ class PttMoviesSpider(CrawlSpider):
                 item["contenttext"] = response.xpath(
                     "//div[@id='main-content']/text()"
                 ).extract()
+
+                # 如果滿足指定頁數就停止
+                if self.count  <= 0:
+                    raise  CloseSpider('close it')
+                self.count -= 1
 
                 yield item
 

@@ -9,13 +9,10 @@ class Movie(models.Model):
     last_modified = models.DateTimeField('Last_modified', auto_now=True)
     duration = models.CharField("Duration", max_length=255, blank=True)
     genre = models.CharField("Genre", max_length=255, blank=True)
-    rating = models.DecimalField(
-        "Rating", max_digits=3, decimal_places=2, blank=True)
+    rating = models.DecimalField("Rating", max_digits=3, decimal_places=2, blank=True)
     images = models.ImageField("Images", blank=True)
-    amount_reviews = models.CharField(
-        "Amount_reviews", max_length=255, blank=True)
-    approval_percentage = models.PositiveIntegerField(
-        "Porcentae", blank=True, null=True)
+    amount_reviews = models.CharField("Amount_reviews", max_length=255, blank=True)
+    approval_percentage = models.PositiveIntegerField("Porcentae", blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -34,8 +31,7 @@ class PttMovie(models.Model):
     contenttext = models.TextField("Contenttext", blank=True)
     date = models.CharField("Date", max_length=255, blank=True)
     title = models.CharField("Title", max_length=255, blank=True)
-    key_word = models.ForeignKey(
-        Movie, on_delete=models.CASCADE, related_name="comments")
+    key_word = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="comments")
 
     def __str__(self):
         return self.title

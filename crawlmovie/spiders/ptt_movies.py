@@ -17,7 +17,7 @@ class PttMoviesSpider(CrawlSpider):
     allowed_domains = ["www.ptt.cc"]
     start_urls = ["https://www.ptt.cc/bbs/movie/index.html"]
 
-    count = 40
+    count = 100
 
     custom_settings = {
         "DOWNLOAD_DELAY": 3,

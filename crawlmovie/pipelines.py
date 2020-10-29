@@ -101,19 +101,19 @@ class YahooPipeline:
         item["images"] = clean_images(item["images"])
         item["amount_reviews"] = clean_amount_reviews(item["amount_reviews"])
 
-        # try:
-        #     Movie.objects.create(
-        #         title=item["title"],
-        #         release_date=item["date"],
-        #         critics_consensus=item["critics_consensus"],
-        #         duration=item["duration"],
-        #         genre=item["genre"],
-        #         rating=item["rating"],
-        #         images=item["images"],
-        #         amount_reviews=item["amount_reviews"],
-        #     )
-        # except:
-        #     print("The movie information is already exists!!")
+        try:
+            Movie.objects.create(
+                title=item["title"],
+                release_date=item["date"],
+                critics_consensus=item["critics_consensus"],
+                duration=item["duration"],
+                genre=item["genre"],
+                rating=item["rating"],
+                images=item["images"],
+                amount_reviews=item["amount_reviews"],
+            )
+        except:
+            print("The movie information is already exists!!")
 
         return item
 

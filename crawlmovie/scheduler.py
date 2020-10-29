@@ -3,6 +3,7 @@ sys.path.append("..")
 
 from crawlmovie.spiders.ptt_movies import PttMoviesSpider  # daily
 from crawlmovie.spiders.yahoomovie import YahoomovieSpider  # daily
+# from crawlmovie.filter import FilterAndInsertData
 
 from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_EXECUTED
 from apscheduler.schedulers.twisted import TwistedScheduler
@@ -23,9 +24,9 @@ logging.basicConfig(
 logging.info("Starting scheduler")
 
 trigger = OrTrigger([
-   CronTrigger(hour='16', minute='38'),
-   CronTrigger(hour='16', minute='00'),
-   #CronTrigger(hour='23', minute='0-30')
+   CronTrigger(hour='09', minute='36'),
+   # CronTrigger(hour='16', minute='00'),
+   # CronTrigger(hour='23', minute='0-30')
 ])
 
 def execution_listener(event):
@@ -45,11 +46,7 @@ def execution_listener(event):
                 second_job.modify(next_run_time=datetime.datetime.now())
             # else:
             #     # job not scheduled, add it and run now
-            #     scheduler.add_job(
-            #         process.crawl,
-            #         'cron',
-            #         args=[PttMoviesSpider]
-            #     )
+            #     scheduler.add_job(FilterAndInsertData, 'cron', args=[PttMoviesSpider])
 
 if __name__ == '__main__':
     process = CrawlerProcess(get_project_settings())
@@ -58,6 +55,7 @@ if __name__ == '__main__':
     # scheduler.get_job(job_id ="my_job_id").modify(next_run_time=datetime.datetime.now())
     scheduler.add_job(process.crawl, 'cron', args=[PttMoviesSpider],
                         hour='23', minute='59', name='ptt')
+    # scheduler.add_job(FilterAndInsertData, 'cron', day='last sun', name='insertData')
     scheduler.add_listener(execution_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
     scheduler.start()
     process.start(False)  # Do not stop reactor after spider closes

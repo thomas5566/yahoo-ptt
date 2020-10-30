@@ -27,24 +27,39 @@ class FilterAndInsertData():
         newDF = newDF.append(movies[mask], ignore_index=True)
     newDF.to_csv('output.csv')
 
-    # Insert Data to DataBase
+    # Insert ptt comment Data to DataBase
     df_records = newDF.to_dict("records")
     for record in df_records:
-        #identifyer_key_word = Movie.objects.get(title=record["key_word"])
-        identifyer_title = record['title']
-        identifyer_author = record['author']
-        PttMovie.objects.update_or_create(
-            # key_word=identifyer_key_word,
-            author=identifyer_author,
-            title=identifyer_title,
-            defaults={
-                "author": record['author'],
-                "contenttext": record['contenttext'],
-                'date': record['date'],
-                'title': record['title'],
-                'key_word': Movie.objects.get(title=record["key_word"]),
-            }
-        )
+        identifyer = PttMovie.objects.filter(author=record['author'], title=record['title']).exists()
+
+        if identifyer:
+            print('Data is already exists!!')
+        else:
+            PttMovie.objects.create(
+                author=record["author"],
+                contenttext=record["contenttext"],
+                date=record["date"],
+                title=record["title"],
+                key_word=Movie.objects.get(title=record["key_word"]), # foreign key
+            )
+            # print('Not exist')
+
+        # identifyer_title = PttMovie.objects.get(title=record['title'])
+        # identifyer_author = PttMovie.objects.get(author=record['author'])
+        # identifyer_key_word = Movie.objects.get(title=record["key_word"])
+        # movie_key_word = Movie.objects.filter(title=record["key_word"]).first()
+        # pttmovie, created = PttMovie.objects.get_or_create(
+        #     # key_word=identifyer_key_word,
+        #     author=PttMovie.objects.filter(author=record['author']).first(),
+        #     title=PttMovie.objects.filter(title=record['title']).first(),
+        #     defaults={
+        #         "author": record['author'],
+        #         "contenttext": record['contenttext'],
+        #         'date': record['date'],
+        #         'title': record['title'],
+        #         'key_word': movie_key_word,
+        #     }
+        # )
     # model_instances = [
     #     PttMovie(
     #         author=record["author"],
@@ -72,18 +87,19 @@ class FilterAndInsertData():
     df2 = df2.fillna(0) # Transfer NaN to 0
     df2.to_csv('count_good_or_bad.csv')
 
-    df_records2 = df2.to_dict('records2')
-    for record in df_records2:
-        # get Movie TABLE title as identify
-        identifyer = Movie.objects.get(title=record["title_x"])
-        CountGoodAndBad.objects.update_or_create(
-            movie=identifyer,
-            defaults={
-                'movie': identifyer,
-                'good_ray': record['good_ray'],
-                'bad_ray': record['bad_ray'],
-            }
-        )
+    # df_records2 = df2.to_dict('records2')
+    # for record in df_records2:
+    #     # get Movie TABLE title as identify
+    #     identifyer = Movie.objects.get(title=record["title_x"])
+    #     CountGoodAndBad.objects.update_or_create(
+    #         movie=identifyer,
+    #         defaults={
+    #             'movie': identifyer,
+    #             'good_ray': record['good_ray'],
+    #             'bad_ray': record['bad_ray'],
+    #         }
+    #     )
+
     # model_instances2 = [
     #     CountGoodAndBad(
     #         good_ray=record["good_ray"],

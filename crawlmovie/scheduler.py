@@ -24,7 +24,7 @@ logging.basicConfig(
 logging.info("Starting scheduler")
 
 trigger = OrTrigger([
-   CronTrigger(hour='09', minute='36'),
+   CronTrigger(hour='09', minute='50'),
    # CronTrigger(hour='16', minute='00'),
    # CronTrigger(hour='23', minute='0-30')
 ])

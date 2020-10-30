@@ -93,8 +93,7 @@ class YahooPipeline:
     def process_item(self, item, spider):
         item["title"] = clean_title(item["title"])
         item["date"] = clean_date(item["date"])
-        item["critics_consensus"] = clean_critics_consensus(
-            item["critics_consensus"])
+        item["critics_consensus"] = clean_critics_consensus(item["critics_consensus"])
         item["duration"] = clean_duration(item["duration"])
         item["genre"] = clean_genre(item["genre"])
         item["rating"] = clean_rating(item["rating"])

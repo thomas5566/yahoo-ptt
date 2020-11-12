@@ -5,8 +5,8 @@ from datetime import date
 class Movie(models.Model):
     title = models.CharField("Title", max_length=255, unique=True)
     critics_consensus = models.TextField("Consensus", blank=True)
-    release_date = models.DateField('Release_date', default=date.today)
-    last_modified = models.DateTimeField('Last_modified', auto_now=True)
+    release_date = models.CharField ('Release_date', max_length=255, blank=True)
+    last_modified = models.DateTimeField('Last_modified', auto_now=True, blank=True, null=True)
     duration = models.CharField("Duration", max_length=255, blank=True)
     genre = models.CharField("Genre", max_length=255, blank=True)
     rating = models.DecimalField("Rating", max_digits=3, decimal_places=2, blank=True)

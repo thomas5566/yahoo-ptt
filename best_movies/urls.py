@@ -26,7 +26,7 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("movie/<int:movie_pk>", views.detail_view, name="detail"),
     path("admin/", admin.site.urls),
-    path('api/', include("movieptt.urls")),
+    # path('api/', include("movieptt.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

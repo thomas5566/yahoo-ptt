@@ -1,13 +1,54 @@
-version: "3" # docker-compose.yml  versions
+# Version of Docker compose
+version: "3"
+
 services:
-  thomas5566:
-    restart: always # 除正常工作外，容器會在任何時候重啟，比如遭遇bug、進程崩潰、docker 重啟等情況。
-    build: . # '.'代表当前目录 指定一個包含Dockerfile的路徑，並通過此Dockerfile來構建容器鏡像。
-             # 注意那個"." ,代表當前目錄。
-    command: "python3 manage.py runserver 0.0.0.0:8000"
-    volumes:
-      - .:/code # 定義了宿主機和容器之間的映射："."表示宿主機的當前目錄，":"為分隔符，"/code"表示容器中的目錄。
-        # 即宿主機當前目錄和容器的/code目錄是連通的，宿主機當前目錄的Django代碼更新時，
-        # 容器中的/code目錄中的代碼也相應的更新了。
-    ports:
-      - "8000:8000"
+    # name of the service
+    # we're going to have a service called app and the build section of the configuration
+    app:
+        build:
+            # . is meaing our current directory that we're running Docker compose from
+            context: .
+        ports:
+            # map our porject from port 8000 on host to port 8000 on Docker image
+            - "8000:8000"
+        # Volume allows us to get the updates that we make to our project
+        # into Docker image in real time
+        volumes:
+            # maps the app directory to the app directory in Docker image
+            - .:/code
+        # run command using shell
+        # run the Django development server available on all the IP address
+        # that run on the Docker container and run port 8000 at local machine
+        command: >
+         sh -c "python manage.py migrate &&
+                python manage.py runserver 0.0.0.0:8000"
+        # environment:
+        #     # equal db
+        #     - DB_HOST=db
+        #     # equal POSTGRES_DB
+        #     - DB_NAME=best_movie
+        #     # equal POSTGRES_USER
+        #     - DB_USER=postgres
+        #     # equal POSTGRES_PASSWORD
+        #     - DB_PASS=1234
+        # Add the depends on the setting
+        # when run docker compose can set diffrent services to depend on other services
+        # we want our app depend on the database service that we create
+        # 1) the database service will start befort the app service
+        # 2) the database service will be availble via the network when you use the hostname DB_HOST=db
+        depends_on:
+            - db
+    db:
+        image: postgres:10-alpine
+        restart: always
+        volumes:
+          - pgdata:/var/lib/postgresql/data/
+        environment:
+            # setting that the Postgres container is expecting when it starts
+            - POSTGRES_DB=best_movie
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=supersecretpassword
+
+volumes:
+  pgdata:
+    external: true

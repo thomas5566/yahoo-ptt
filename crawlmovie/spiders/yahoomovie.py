@@ -8,6 +8,7 @@ django.setup()
 from crawlmovie.items import YahooCloudItem
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
+from best_movies.settings import MEDIA_ROOT
 
 import scrapy
 from os import write
@@ -18,8 +19,8 @@ class YahoomovieSpider(CrawlSpider):
     allowed_domains = ["yahoo.com.tw"]
     start_urls = ["https://movies.yahoo.com.tw/movie_intheaters.html?page=1"]
 
-    # IMAGE_DIR = "/Users/Thomas/Desktop/yahoo-ptt/media/movie/images"
-    IMAGE_DIR = "D:\\Users\\Administrator\\gb5566\\yahoo_ptt\\media\\movie\\images\\yahoo"
+    IMAGE_DIR = MEDIA_ROOT
+    # IMAGE_DIR = "D:\\Users\\Administrator\\gb5566\\yahoo_ptt\\media\\movie\\images\\yahoo"
 
     custom_settings = {
         "IMAGES_STORE": IMAGE_DIR,
@@ -65,8 +66,7 @@ class YahoomovieSpider(CrawlSpider):
         item["critics_consensus"] = "".join(
             [i.replace(u"\xa0", u"") for i in critics_consensus]
         )
-
-        item["date"] = response.xpath(
+        item["release_date"] = response.xpath(
             "(//div[@class='movie_intro_info_r']/span[1]/text())"
         ).extract()[0]
 
@@ -91,7 +91,5 @@ class YahoomovieSpider(CrawlSpider):
             "//div[@class='movie_intro_foto']/img/@src").extract()
         link = "".join(url)
         item["images"] = {item["title"]: link}
-
-
 
         yield item

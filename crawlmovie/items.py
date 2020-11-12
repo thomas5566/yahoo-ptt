@@ -21,9 +21,10 @@ class YahooCloudItem(scrapy.Item):
     django_model = Movie
     title = scrapy.Field()
     critics_consensus = scrapy.Field()
-    date = scrapy.Field()
+    release_date = scrapy.Field()
     duration = scrapy.Field()
     genre = scrapy.Field()
     rating = scrapy.Field()
     amount_reviews = scrapy.Field()
     images = scrapy.Field()
+    image_urls = scrapy.Field()

@@ -26,8 +26,7 @@ SECRET_KEY = "itku20246jk)-p167v^^z)7r5nhro(hkx3+wgk78$(m235k-d@"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', ]
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -77,19 +76,19 @@ WSGI_APPLICATION = "best_movies.wsgi.application"
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+   "default": {
+        "ENGINE": "django.db.backends.",
+        "NAME": 'best_movie',
+        "USER": 'postgres',
+        "PASSWORD": 'supersecretpassword',
+        "HOST": 'db',
+        'PORT': 5432,
+        # theose infomations are setting on docker-compose
+        # "HOST": os.environ.get("DB_HOST"),
+        # "NAME": os.environ.get("DB_NAME"),
+        # "USER": os.environ.get("DB_USER"),
+        # "PASSWORD": os.environ.get("DB_PASS"),
     }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'postgres',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'postgres',
-    #     'HOST': 'db',
-    #     'PORT': 5432,
-    # }
-
 }
 
 
@@ -111,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Taipei"
 
 USE_I18N = True
 

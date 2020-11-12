@@ -1,9 +1,7 @@
 from datetime import datetime
 from time import strftime
 from itemadapter import ItemAdapter
-import scrapy
-import os
-import re
+import scrapy, os, re, psycopg2
 
 from scrapy.pipelines.images import ImagesPipeline, FilesPipeline
 from scrapy.exceptions import DropItem
@@ -11,16 +9,15 @@ from scrapy.exceptions import DropItem
 # Scrapy export csv without specifying in cmd
 from scrapy import signals
 from scrapy.exporters import CsvItemExporter, JsonItemExporter
-import csv
-
+from scrapy.spiders import Spider
 
 from movieptt.models import Movie
 
 
 def clean_title(param):
-    # regex = "[A-Za-z\/\[\]\.\']+"
+    regex = "[A-Za-z\！\：\[\]\.\']+"
     # regex = "[^\u4e00-\u9fa5]+"
-    # param = re.sub(regex, " ", str(param))
+    param = re.sub(regex, "", str(param))
     return "".join(param)
 
 
@@ -90,9 +87,30 @@ class PttPipeline:
 
 
 class YahooPipeline:
+
+    def open_spider(self, spider):
+        hostname = 'db'
+        username = 'postgres'
+        password = 'supersecretpassword'
+        database = 'best_movie'
+
+        self.connection = psycopg2.connect(
+                host=hostname,
+                user=username,
+                password=password,
+                dbname=database,
+                port="5432",
+            )
+        self.cur = self.connection.cursor()
+
+    def close_spider(self, spider):
+        self.cur.close()
+        self.connection.close()
+
     def process_item(self, item, spider):
+
         item["title"] = clean_title(item["title"])
-        item["date"] = clean_date(item["date"])
+        item["release_date"] = clean_date(item["release_date"])
         item["critics_consensus"] = clean_critics_consensus(item["critics_consensus"])
         item["duration"] = clean_duration(item["duration"])
         item["genre"] = clean_genre(item["genre"])
@@ -101,20 +119,49 @@ class YahooPipeline:
         item["amount_reviews"] = clean_amount_reviews(item["amount_reviews"])
 
         try:
-            Movie.objects.create(
-                title=item["title"],
-                release_date=item["date"],
-                critics_consensus=item["critics_consensus"],
-                duration=item["duration"],
-                genre=item["genre"],
-                rating=item["rating"],
-                images=item["images"],
-                amount_reviews=item["amount_reviews"],
+            self.cur.execute(
+                "insert into movieptt_movie(title, critics_consensus, release_date, duration, genre, rating, images, amount_reviews) values(%s,%s,%s,%s,%s,%s,%s,%s)",
+                (
+                    item["title"],
+                    item["critics_consensus"],
+                    item['release_date'],
+                    item["duration"],
+                    item["genre"],
+                    item["rating"],
+                    item["images"],
+                    item["amount_reviews"],
+                )
             )
         except:
-            print("The movie information is already exists!!")
+            pass
 
+        self.connection.commit()
         return item
+    # def process_item(self, item, spider):
+    #     item["title"] = clean_title(item["title"])
+    #     item["date"] = clean_date(item["date"])
+    #     item["critics_consensus"] = clean_critics_consensus(item["critics_consensus"])
+    #     item["duration"] = clean_duration(item["duration"])
+    #     item["genre"] = clean_genre(item["genre"])
+    #     item["rating"] = clean_rating(item["rating"])
+    #     item["images"] = clean_images(item["images"])
+    #     item["amount_reviews"] = clean_amount_reviews(item["amount_reviews"])
+
+    #     try:
+    #         Movie.objects.create(
+    #             title=item["title"],
+    #             release_date=item["date"],
+    #             critics_consensus=item["critics_consensus"],
+    #             duration=item["duration"],
+    #             genre=item["genre"],
+    #             rating=item["rating"],
+    #             images=item["images"],
+    #             amount_reviews=item["amount_reviews"],
+    #         )
+    #     except:
+    #         print("The movie information is already exists!!")
+
+    #     return item
 
 
 class CustomImagePipeline(ImagesPipeline):

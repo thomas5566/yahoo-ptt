@@ -6,14 +6,13 @@ sys.path.append(os.path.join(os.path.dirname(
 os.environ['DJANGO_SETTINGS_MODULE'] = 'best_movies.settings'
 django.setup()
 
-from best_movies.settings import MEDIA_ROOT
+# from best_movies.settings import MEDIA_ROOT
 
 BOT_NAME = 'crawlmovie'
-IMAGES_STORE = MEDIA_ROOT
+# IMAGES_STORE = MEDIA_ROOT
 
 SPIDER_MODULES = ['crawlmovie.spiders']
 NEWSPIDER_MODULE = 'crawlmovie.spiders'
-
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'crawlmovie (+http://www.yourdomain.com)'
@@ -64,11 +63,15 @@ DOWNLOAD_DELAY = 3
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-    # 'scrapy.pipelines.images.ImagesPipeline': 100,
-    'crawlmovie.pipelines.PttPipeline': 100,
-    'crawlmovie.pipelines.YahooPipeline': 100,
-}
+# ITEM_PIPELINES = {
+#     'scrapy.pipelines.images.ImagesPipeline': 100,
+#     "crawlmovie.pipelines.CustomImagePipeline": 1,
+#     "crawlmovie.pipelines.YahooPipeline": 100,
+#     'crawlmovie.pipelines.PttPipeline': 100,
+#     "crawlmovie.pipelines.DeleteNullTitlePipeline": 200,
+#     "crawlmovie.pipelines.DuplicatesTitlePipeline": 200,
+#     "crawlmovie.pipelines.CsvExportPipeline": 300,
+# }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

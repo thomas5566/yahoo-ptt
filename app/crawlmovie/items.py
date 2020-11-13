@@ -5,8 +5,8 @@
 
 import scrapy
 from scrapy_djangoitem import DjangoItem
-from movieptt.models import Movie
-from movieptt.models import PttMovie
+from app.movieptt.models import Movie
+from app.movieptt.models import PttMovie
 
 
 class ScrapyCloudItem(scrapy.Item):

@@ -13,7 +13,7 @@ from .models import MovieImage
 from .models import PttMovie
 from .models import CountGoodAndBad
 
-from movieptt.serializers import MovieSerializer
+from app.movieptt.serializers import MovieSerializer
 
 
 class MovieViewSet(viewsets.ModelViewSet):

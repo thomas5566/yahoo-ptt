@@ -11,7 +11,7 @@ from scrapy import signals
 from scrapy.exporters import CsvItemExporter, JsonItemExporter
 from scrapy.spiders import Spider
 
-from movieptt.models import Movie
+from app.movieptt.models import Movie
 
 
 def clean_title(param):
@@ -80,7 +80,7 @@ class PttPipeline:
     def process_item(self, item, spider):
         item["title"] = clean_title(item["title"])
         item["author"] = clean_author(item["author"])
-        item["date"] = item["date"]
+        item["date"]
         item["contenttext"] = clean_contenttext(item["contenttext"])
 
         return item

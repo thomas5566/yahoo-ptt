@@ -8,7 +8,7 @@ sys.path.append("..")
 os.environ["DJANGO_SETTINGS_MODULE"] = "best_movies.settings"
 django.setup()
 
-from movieptt.models import PttMovie, Movie, CountGoodAndBad
+from app.movieptt.models import PttMovie, Movie, CountGoodAndBad
 from django.db.models import F
 
 import pandas as pd

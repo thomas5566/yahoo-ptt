@@ -7,7 +7,7 @@ import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.exceptions import CloseSpider
-from crawlmovie.items import ScrapyCloudItem
+from app.crawlmovie.items import ScrapyCloudItem
 
 from datetime import datetime
 

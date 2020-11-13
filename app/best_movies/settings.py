@@ -21,15 +21,19 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "itku20246jk)-p167v^^z)7r5nhro(hkx3+wgk78$(m235k-d@"
-
+# SECRET_KEY = "itku20246jk)-p167v^^z)7r5nhro(hkx3+wgk78$(m235k-d@"
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-ALLOWED_HOSTS = ['*']
+# DEBUG = True
+DEBUG = int(os.environ.get("DEBUG", default=0))
+
+# ALLOWED_HOSTS = ['*']
+# 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
+# For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -77,17 +81,19 @@ WSGI_APPLICATION = "best_movies.wsgi.application"
 
 DATABASES = {
    "default": {
-        "ENGINE": "django.db.backends.",
-        "NAME": 'best_movie',
-        "USER": 'postgres',
-        "PASSWORD": 'supersecretpassword',
-        "HOST": 'db',
-        'PORT': 5432,
+        # "ENGINE": "django.db.backends.postgresql",
+        # "NAME": 'best_movie',
+        # "USER": 'postgres',
+        # "PASSWORD": 'supersecretpassword',
+        # "HOST": 'db',
+        # 'PORT': 5432,
         # theose infomations are setting on docker-compose
-        # "HOST": os.environ.get("DB_HOST"),
-        # "NAME": os.environ.get("DB_NAME"),
-        # "USER": os.environ.get("DB_USER"),
-        # "PASSWORD": os.environ.get("DB_PASS"),
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
 

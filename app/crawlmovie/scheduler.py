@@ -1,8 +1,8 @@
 import sys, logging, datetime
 sys.path.append("..")
 
-from crawlmovie.spiders.ptt_movies import PttMoviesSpider  # daily
-from crawlmovie.spiders.yahoomovie import YahoomovieSpider  # daily
+from app.crawlmovie.spiders.ptt_movies import PttMoviesSpider  # daily
+from app.crawlmovie.spiders.yahoomovie import YahoomovieSpider  # daily
 # from crawlmovie.filter import FilterAndInsertData
 
 from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_EXECUTED

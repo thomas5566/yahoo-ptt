@@ -5,10 +5,10 @@ os.environ["DJANGO_SETTINGS_MODULE"] = "best_movies.settings"
 django.setup()
 # import csv
 # from scrapy import signals
-from crawlmovie.items import YahooCloudItem
+from app.crawlmovie.items import YahooCloudItem
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-from best_movies.settings import MEDIA_ROOT
+from app.best_movies.settings import MEDIA_ROOT
 
 import scrapy
 from os import write

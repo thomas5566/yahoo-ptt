@@ -12,6 +12,6 @@
    docker volume inspect pgdata
 6. if the container fails to start, check for errors in the logs via:
    docker-compose -f docker-compose.prod.yml logs -f.
-7. run env
+7. run env  
    .\env\Scripts\activate
 
